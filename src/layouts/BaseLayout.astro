@@ -1,0 +1,161 @@
+---
+import { SEO } from "astro-seo";
+import "../styles/global.css";
+
+import Footer from "../components/Footer.astro";
+import { Schema } from "astro-seo-schema";
+import Wangambang from "../components/wangambang.astro";
+import WhatsAppButton from '../components/WhatsAppButton';
+import SpeedInsights from "@vercel/speed-insights/astro";
+import Metapiksel from "../components/metapiksel.astro";
+
+
+// Mengambil props titlemeta dan descriptionmeta dari halaman
+const {
+  titlemeta = "Super Digital - Solusi Kebutuhan Produk Digital Anda",
+  descriptionmeta = "Jelajahi Super Digital, jual produk digital tidak pernah semudah dan semenyenangkan ini",
+  imagecover = "/favicon.png", // Set default image jika tidak ada gambar
+} = Astro.props;
+
+const siteURL = new URL("https://kacamatacuan.web.id/"); // Ganti dengan URL situs Anda
+const imageURL = new URL(imagecover, siteURL); // Properti gambar OpenGraph menggunakan URL yang valid
+const twitterHandle = "@Jedoweb"; // Ganti dengan username Twitter Anda
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+
+    <!-- SEO optimization menggunakan astro-seo -->
+    <SEO
+      title={titlemeta}
+      description={descriptionmeta}
+      canonical={siteURL.href}
+      openGraph={{
+        basic: {
+          title: titlemeta,
+          type: "website",
+          image: imageURL.href, // Gunakan URL gambar yang telah diproses
+          url: siteURL.href,
+        },
+        image: {
+          url: imageURL.href, // URL gambar default atau custom
+          alt: "kacamatacuan OpenGraph Image", // Alt text gambar
+          width: 1200, // Lebar gambar OG
+          height: 630, // Tinggi gambar OG
+        },
+      }}
+      twitter={{
+        card: "summary_large_image", // Menggunakan gambar besar untuk Twitter Card
+        creator: twitterHandle,
+        image: imageURL.href, // URL gambar default atau custom
+      }}
+      extend={{
+        // Menambahkan favicon
+        link: [{ rel: "icon", href: "/favicon.png", type: "image/png" }],
+        // Menambahkan meta tambahan
+        meta: [
+          { name: "author", content: "Jedoweb" },
+          {
+            name: "keywords",
+            content:
+              "Produk digital, jual produk digital, marketplace produk digital, produk digital terlaris, produk digital untuk bisnis, produk digital reseller, produk digital Indonesia, jasa produk digital, platform jual produk digital, cara menjual produk digital, bisnis produk digital, kebutuhan digital, ebook digital marketing, software digital bisnis, template website profesional, plugin WordPress premium, tools digital marketing, panduan bisnis online, desain grafis digital, aplikasi bisnis digital, produk digital custom, langganan SaaS digital, hosting website murah, sertifikat SSL digital, domain murah untuk bisnis, paket email bisnis, produk digital kreatif, digital asset management, produk digital edukasi, tools SEO premium, ebook belajar coding, software akuntansi digital, layanan desain logo, desain presentasi digital, video editor premium, pelatihan online digital, produk digital kreator konten, solusi digital marketing, software keamanan data, langganan aplikasi digital.",
+          },
+          { name: "robots", content: "index, follow" }, // Memberikan izin mesin pencari untuk mengindeks halaman
+          { name: "twitter:site", content: twitterHandle },
+          { name: "twitter:image", content: new URL(imageURL, siteURL).href }, // Menggunakan URL objek yang valid untuk Twitter
+        ],
+      }}
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Metapiksel />
+
+    <Schema
+      item={{
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "Jedoweb",
+        description:
+          "Produk digital, jual produk digital, marketplace produk digital, produk digital terlaris, produk digital untuk bisnis, produk digital reseller, produk digital Indonesia, jasa produk digital, platform jual produk digital, cara menjual produk digital, bisnis produk digital, kebutuhan digital, ebook digital marketing, software digital bisnis, template website profesional, plugin WordPress premium, tools digital marketing, panduan bisnis online, desain grafis digital, aplikasi bisnis digital, produk digital custom, langganan SaaS digital, hosting website murah, sertifikat SSL digital, domain murah untuk bisnis, paket email bisnis, produk digital kreatif, digital asset management, produk digital edukasi, tools SEO premium, ebook belajar coding, software akuntansi digital, layanan desain logo, desain presentasi digital, video editor premium, pelatihan online digital, produk digital kreator konten, solusi digital marketing, software keamanan data, langganan aplikasi digital.",
+        url: "https://kacamatacuan.web.id",
+        telephone: "+6282128582738",
+        image: "https://kacamatacuan.web.id/favicon.png",
+        priceRange: "IDR",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Cileungsi Bogor",
+          addressLocality: "Jawabarat",
+          addressRegion: "Indonesia",
+          addressCountry: "ID",
+        },
+        sameAs: [
+          "https://www.facebook.com/profile.php?id=61568600169195",
+          "https://www.instagram.com/jedo.digital/",
+        ],
+      }}
+    />
+
+<!-- Meta Tags -->
+<head>
+  <!-- Google Adsense -->
+  <meta name="google-adsense-account" content="ca-pub-8454337513998618" />
+  
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="Bpbd97x6bEmRhL87NrY9gNq2WsNksvGHyQNJHiQqWPQ" />
+</head>
+
+<!-- Google Tag Manager -->
+<script is:inline>
+  (function(w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-KJ654KV9');
+</script>
+
+<!-- Google Analytics -->
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-HP58H3LY8Q');
+</script>
+
+<!-- Google Adsense -->
+<script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8454337513998618" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+  {/* Google Tag Manager (noscript) */}]
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-KJ654KV9"
+        height="0"
+        width="0"
+        style={{ display: "none", visibility: "hidden" }}></iframe>
+    </noscript>
+    <!-- Slot konten utama -->
+    <main class="mx-auto scroll-smooth">
+      <slot />
+    </main>
+    <Footer />
+    <SpeedInsights />
+    <WhatsAppButton client:load />
+  </body>
+</html>

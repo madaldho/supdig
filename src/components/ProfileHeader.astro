@@ -1,0 +1,76 @@
+---
+// src/components/ProfileHeader.astro
+interface Props {
+  avatarUrl: string;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+const { avatarUrl, title, subtitle, description } = Astro.props;
+---
+
+<div class="relative bg-white rounded-2xl shadow-lg p-8 text-center max-w-2xl mx-auto mb-8">
+  <button
+    id="shareButton"
+    class="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+    aria-label="Share"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-600"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+  </button>
+
+  <div class="flex flex-col items-center space-y-4">
+    <div class="relative w-32 h-32">
+      <a
+        href="/"
+        class="block relative w-full h-full focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+      >
+        <img
+          src={avatarUrl || "/favicon.png"}
+          alt={title}
+          class="rounded-full object-cover border-4 border-white shadow-lg w-full h-full"
+        />
+      </a>
+    </div>
+
+    <div class="space-y-2">
+      <h1 class="text-3xl font-bold text-gray-900">
+        {title}
+      </h1>
+
+      <p class="text-xl font-medium text-blue-600">
+        {subtitle}
+      </p>
+
+      <p class="text-gray-600 max-w-md mx-auto">
+        {description}
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const shareButton = document.getElementById('shareButton');
+  if (shareButton) {
+    shareButton.addEventListener('click', async () => {
+      const url = window.location.href;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: document.title,
+            url: url
+          });
+        } catch (error) {
+          console.error('Error sharing:', error);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(url);
+          alert('Link copied to clipboard!');
+        } catch (error) {
+          console.error('Error copying to clipboard:', error);
+        }
+      }
+    });
+  }
+</script>

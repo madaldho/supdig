@@ -1,0 +1,22 @@
+---
+// src/components/CardGrid.astro
+import Card from './Card.astro';
+import type { Item } from '../data/items';
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  {items.map((item) => (
+    <Card
+      title={item.title}
+      description={item.description}
+      imageUrl={item.imageUrl}
+      redirectUrl={item.redirectUrl}
+    />
+  ))}
+</div>

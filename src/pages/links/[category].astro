@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import LinkButton from "../../components/LinkButton.astro";
+import { contentfulClient } from "../../lib/contentful";
+import type { Link } from "../../lib/contentful";
+import ProfileHeader from "../../components/ProfileHeader.astro";
+
+// Ambil parameter kategori dari URL
+export async function getStaticPaths() {
+  const entries = await contentfulClient.getEntries<Link>({
+    content_type: "link",
+  });
+
+  const categories = entries.items
+    .map((item) => item.fields.category)
+    .filter((category): category is string => !!category) // Hanya ambil kategori yang valid
+    .filter((value, index, self) => self.indexOf(value) === index); // Hapus duplikasi
+
+  return categories.map((category) => ({
+    params: { category },
+  }));
+}
+
+const { category } = Astro.params;
+
+// Fetch data berdasarkan kategori
+let entries;
+
+try {
+  entries = await contentfulClient.getEntries<Link>({
+    content_type: "link",
+    "fields.category": category,
+  });
+
+  if (!entries.items.length) {
+    throw new Error(`Tidak ada data ditemukan untuk kategori: ${category}`);
+  }
+} catch (error) {
+  console.error("Error fetching data:", error);
+  throw new Error(`Gagal memuat data untuk kategori ${category}`);
+}
+
+// Mapping data ke format sederhana
+const links = entries.items.map((item) => ({
+  title: item.fields.title || "No Title",
+  description: item.fields.description || "No Description",
+  imageUrl:
+    item.fields.image?.fields?.file?.url
+      ? `https:${item.fields.image.fields.file.url}`
+      : "/default-image.png", // Fallback jika image tidak ada
+  redirectUrl: item.fields.redirectUrl || "#",
+}));
+---
+<BaseLayout title={`Kategori: ${category}`} description={`Daftar layanan untuk kategori ${category}`}>
+  <main class="container h-screen mx-auto px-4 py-12">
+    <ProfileHeader
+    avatarUrl="/favicon.png"
+    title="SuperDigital"
+    subtitle="Penyedia Digital Produk Terbaik"
+    description="Kami adalah platform terkemuka yang menyediakan produk digital berkualitas tinggi untuk memenuhi kebutuhan Anda. Dengan SuperDigital, Anda dapat menemukan solusi terbaik untuk bisnis dan kreativitas Anda."
+  />
+  
+
+    <!-- Daftar Links -->
+    <div class="space-y-6">
+      {links.length ? (
+        links.map((link) => (
+          <LinkButton
+            title={link.title}
+            subtitle={link.description}
+            imageUrl={link.imageUrl}
+            redirectUrl={link.redirectUrl}
+          />
+        ))
+      ) : (
+        <p class="text-center text-red-500 bg-red-50 rounded-lg p-4">
+          Tidak ada data untuk kategori ini.
+        </p>
+      )}
+    </div>
+  </main>
+</BaseLayout>

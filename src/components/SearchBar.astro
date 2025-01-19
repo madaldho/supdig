@@ -1,0 +1,114 @@
+---
+// src/components/SearchBar.astro
+---
+
+<div class="relative max-w-2xl mx-auto mb-8">
+  <div class="relative">
+    <input
+      id="search-input"
+      type="text"
+      placeholder="Cari layanan..."
+      class="w-full px-4 py-3 pl-12 pr-4 text-gray-800 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all duration-300"
+    />
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+  </div>
+  <ul id="suggestions" class="hidden absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+  </ul>
+</div>
+
+<script>
+  // Import data
+  import { items, links } from '../data/items';
+
+  // Get DOM elements
+  const searchInput = document.querySelector('#search-input') as HTMLInputElement;
+  const suggestionsList = document.querySelector('#suggestions') as HTMLUListElement;
+  
+  if (!searchInput || !suggestionsList) {
+    console.error('Required elements not found');
+    throw new Error('Required elements not found');
+  }
+
+  // Type guard functions
+  function isItem(item: any): item is typeof items[0] {
+    return 'description' in item;
+  }
+
+  function isLinkItem(item: any): item is typeof links[0] {
+    return 'subtitle' in item;
+  }
+
+  // Function to update suggestions
+  function updateSuggestions(searchTerm: string) {
+    const allItems = [...items, ...links];
+    const filteredItems = allItems.filter(item => {
+      const searchLower = searchTerm.toLowerCase();
+      const titleMatch = item.title.toLowerCase().includes(searchLower);
+      
+      if (isItem(item)) {
+        return titleMatch || item.description.toLowerCase().includes(searchLower);
+      } else if (isLinkItem(item)) {
+        return titleMatch || item.subtitle.toLowerCase().includes(searchLower);
+      }
+      
+      return titleMatch;
+    });
+
+    // Update suggestions list HTML
+    suggestionsList.innerHTML = filteredItems
+      .slice(0, 5)
+      .map(item => `
+        <li class="px-4 py-3 cursor-pointer hover:bg-gray-50 flex items-center">
+          <img 
+            src="${item.imageUrl}" 
+            alt="${item.title}" 
+            class="w-10 h-10 rounded-full mr-3 object-cover"
+            onerror="this.src='/placeholder.svg'"
+          >
+          <div class="flex-1">
+            <div class="text-gray-900 font-medium">${item.title}</div>
+            <div class="text-gray-500 text-sm">
+              ${isItem(item) ? item.description : item.subtitle}
+            </div>
+          </div>
+        </li>
+      `)
+      .join('');
+
+    // Toggle visibility
+    suggestionsList.classList.toggle('hidden', filteredItems.length === 0);
+
+    // Dispatch custom event for filtering main content
+    document.dispatchEvent(new CustomEvent('filterContent', {
+      detail: { searchTerm }
+    }));
+  }
+
+  // Event Listeners
+  searchInput.addEventListener('input', (e) => {
+    const target = e.target as HTMLInputElement;
+    updateSuggestions(target.value);
+  });
+
+  suggestionsList.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const li = target.closest('li');
+    
+    if (li) {
+      const url = li.dataset.url;
+      if (url) {
+        window.open(url, '_blank');
+      }
+      
+      suggestionsList.classList.add('hidden');
+    }
+  });
+
+  // Close suggestions when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!searchInput.contains(target) && !suggestionsList.contains(target)) {
+      suggestionsList.classList.add('hidden');
+    }
+  });
+</script>

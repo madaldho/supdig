@@ -1,0 +1,160 @@
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProfileHeader from '../components/ProfileHeader.astro';
+import SearchBar from '../components/SearchBar.astro';
+import LinkButton from '../components/LinkButton.astro';
+import CardGrid from '../components/CardGrid.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import { items, links } from '../data/items';
+
+const features = [
+  "Produk digital berkualitas premium",
+  "Pengiriman ke seluruh dunia",
+  "Layanan dukungan pelanggan 24/7",
+  "Manfaat eksklusif untuk anggota",
+  "Garansi produk termasuk"
+];
+---
+
+<BaseLayout title="SuperDigital - Penyedia Digital Produk Terbaik">
+  <main class="py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <ProfileHeader
+        avatarUrl="/favicon.png"
+        title="SuperDigital"
+        subtitle="Penyedia Digital Produk Terbaik"
+        description="Kami adalah platform terkemuka yang menyediakan produk digital berkualitas tinggi untuk memenuhi kebutuhan Anda. Dengan SuperDigital, Anda dapat menemukan solusi terbaik untuk bisnis dan kreativitas Anda."
+      />
+      
+      <SearchBar />
+
+      <div id="filtered-content" class="space-y-8 max-w-2xl mx-auto" >
+        <div id="links-container" class="space-y-6">
+          {links.map((link) => (
+            <LinkButton
+              title={link.title}
+              subtitle={link.subtitle}
+              imageUrl={link.imageUrl}
+              redirectUrl={link.redirectUrl}
+            />
+          ))}
+        </div>
+        <div id="items-container" >
+          <CardGrid items={items} />
+        </div>
+      </div>
+
+      <FeatureCard
+        title="Semua Produk Premium Termasuk:"
+        features={features}
+        productName="VIP Pokoknya"
+        ctaText="Beli Sekarang"
+        ctaLink="#"
+      />
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { items, links } from '../data/items';
+
+  const filteredContent = document.querySelector('#filtered-content');
+  const linksContainer = document.querySelector('#links-container') as HTMLElement;
+  const itemsContainer = document.querySelector('#items-container') as HTMLElement;
+
+  if (!filteredContent || !linksContainer || !itemsContainer) {
+    console.error('Required elements not found');
+    throw new Error('Required elements not found');
+  }
+
+  function renderFilteredContent(searchTerm: string) {
+    const term = searchTerm.toLowerCase();
+
+    // Filter links
+    const filteredLinks = links.filter(link =>
+      link.title.toLowerCase().includes(term) ||
+      link.subtitle.toLowerCase().includes(term)
+    );
+
+    // Filter items
+    const filteredItems = items.filter(item =>
+      item.title.toLowerCase().includes(term) ||
+      item.description.toLowerCase().includes(term)
+    );
+
+    // Update links
+    linksContainer.innerHTML = filteredLinks
+      .map(link => `
+        <a 
+          href="${link.redirectUrl}" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="group flex items-center bg-white rounded-lg p-4 hover:bg-gray-50 transition-all duration-300 shadow-md max-w-2xl mx-auto mb-6 transform hover:scale-105"
+        >
+          <div class="flex-shrink-0 w-16 h-16 relative mr-4">
+            <img 
+              src="${link.imageUrl}" 
+              alt="" 
+              class="rounded-full object-cover w-full h-full"
+              onerror="this.src='/placeholder.svg'"
+            />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">${link.title}</h2>
+                <p class="text-sm text-gray-500 truncate">${link.subtitle}</p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </div>
+          </div>
+        </a>
+      `)
+      .join('');
+
+    // Update items
+    itemsContainer.innerHTML = `
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        ${filteredItems
+          .map(item => `
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105">
+              <div class="relative h-48">
+                <img 
+                  src="${item.imageUrl}" 
+                  alt="${item.title}" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  onerror="this.src='/placeholder.svg'"
+                />
+              </div>
+              <div class="p-6">
+                <h2 class="text-xl font-bold mb-2 text-gray-900">${item.title}</h2>
+                <p class="text-gray-600 text-sm mb-4">${item.description}</p>
+                <a 
+                  href="${item.redirectUrl}" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="inline-block bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700 transition-colors duration-300"
+                >
+                  Lihat Detail
+                </a>
+              </div>
+            </div>
+          `)
+          .join('')}
+      </div>
+    `;
+
+    // Show/hide containers based on results
+    linksContainer.style.display = filteredLinks.length ? 'block' : 'none';
+    itemsContainer.style.display = filteredItems.length ? 'block' : 'none';
+  }
+
+  // Listen for filter events from SearchBar
+  document.addEventListener('filterContent', ((e: CustomEvent) => {
+    renderFilteredContent(e.detail.searchTerm);
+  }) as EventListener);
+
+  // Initial render
+  renderFilteredContent('');
+</script>
