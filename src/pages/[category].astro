@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import LinkButton from "../../components/LinkButton.astro";
-import { contentfulClient } from "../../lib/contentful";
-import type { Link } from "../../lib/contentful";
-import ProfileHeader from "../../components/ProfileHeader.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LinkButton from "../components/LinkButton.astro";
+import { contentfulClient } from "../lib/contentful";
+import type { Link } from "../lib/contentful";
+import ProfileHeader from "../components/ProfileHeader.astro";
 
 // Ambil parameter kategori dari URL
 export async function getStaticPaths() {
