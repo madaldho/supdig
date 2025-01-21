@@ -6,11 +6,11 @@ export default function WhatsAppButton() {
   return (
     <FloatingWhatsApp
       phoneNumber='6281387013123'
-      accountName='Akang Super Digital'
-      avatar='/favicon.png'
-      statusMessage='Biasanya membalas dalam 1 jam'
-      initialMessageByServer='Halo! Ada yang bisa kami bantu?'
-      initialMessageByClient='Halo! Saya menemukan kontak Anda di website. Saya ingin konsultasi'
+      accountName='Kang Super Digital'
+      avatar='/logosuperdigital.webp'
+      statusMessage='Abangnya produk digital'
+      initialMessageByServer='Halo! Ada yang bisa Akang bantu?'
+      initialMessageByClient='Halo! Saya menemukan kontak Anda di website. Saya ingin konsultasi mengenai produk digital'
       startChatText='Mulai chat dengan kami'
       tooltipText='Butuh bantuan? Klik untuk chat!'
       allowEsc={true}
