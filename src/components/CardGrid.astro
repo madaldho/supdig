@@ -10,7 +10,7 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-1 gap-6 max-w-2xl mx-auto">
   {items.map((item) => (
     <Card
       title={item.title}
