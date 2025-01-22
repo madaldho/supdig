@@ -14,9 +14,9 @@ const { title, subtitle, imageUrl, redirectUrl } = Astro.props;
   href={redirectUrl}
   target="_blank"
   rel="noopener noreferrer"
-  class="group flex items-start bg-white rounded-lg p-4 hover:bg-gray-50 transition-all duration-300 shadow-md max-w-2xl mx-auto mb-6 transform hover:scale-105"
+  class="group flex flex-col sm:flex-row items-start bg-white rounded-lg p-4 hover:bg-gray-50 transition-all duration-300 shadow-md max-w-2xl mx-auto mb-6 transform hover:scale-105"
 >
-  <div class="flex-shrink-0 w-16 h-16 relative">
+  <div class="flex-shrink-0 w-16 h-16 relative mb-4 sm:mb-0 sm:mr-4">
     <img
       src={imageUrl || "/favicon.png"}
       alt=""
@@ -24,13 +24,13 @@ const { title, subtitle, imageUrl, redirectUrl } = Astro.props;
     />
   </div>
   
-  <div class="flex flex-1 min-w-0 ml-4">
-    <div class="flex-1 min-w-0 pr-4">
+  <div class="flex flex-1 min-w-0 flex-col sm:flex-row">
+    <div class="flex-1 min-w-0 pr-4 mb-2 sm:mb-0">
       <h2 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">{title}</h2>
-      <p class="text-sm text-gray-500 whitespace-normal break-words line-clamp-3">{subtitle}</p>
+      <p class="text-sm text-gray-500 mt-1 line-clamp-3">{subtitle}</p>
     </div>
     
-    <div class="flex-shrink-0 self-center">
+    <div class="flex-shrink-0 self-start sm:self-center mt-2 sm:mt-0">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" 
