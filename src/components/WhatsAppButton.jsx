@@ -5,7 +5,7 @@ import { FloatingWhatsApp } from '@carlos8a/react-whatsapp-floating-button';
 export default function WhatsAppButton() {
   return (
     <FloatingWhatsApp
-      phoneNumber='6281387013123'
+      phoneNumber='6282135415655'
       accountName='Kang Super Digital'
       avatar='/logosuperdigital.webp'
       statusMessage='Abangnya produk digital'
