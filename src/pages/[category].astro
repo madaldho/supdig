@@ -12,16 +12,20 @@ export async function getStaticPaths() {
 
   const paths = new Set();
 
+  // Memastikan unik berdasarkan category dan slug
   entries.items.forEach((item) => {
     if (item.fields.category) {
-      paths.add({ params: { category: encodeURIComponent(item.fields.category.toLowerCase()) } });
+      paths.add(`/category/${encodeURIComponent(item.fields.category.toLowerCase())}`);
     }
     if (item.fields.slug) {
-      paths.add({ params: { category: encodeURIComponent(item.fields.slug.toLowerCase()) } });
+      paths.add(`/slug/${encodeURIComponent(item.fields.slug.toLowerCase())}`);
     }
   });
 
-  return Array.from(paths);
+  // Konversi set ke array objek dengan format yang dibutuhkan Astro
+  return Array.from(paths).map(path => ({
+    params: { category: (path as string).split('/')[2] } // Ambil bagian terakhir dari path
+  }));
 }
 
 const { category } = Astro.params;
